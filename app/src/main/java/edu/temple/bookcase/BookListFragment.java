@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
@@ -24,9 +25,9 @@ public class BookListFragment extends Fragment {
     private static final String ARG_PARAM1 = "bookname";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    ListView listView;
-
+    private String bookNames[];
+    private ListView listView;
+    private Context parent;
     private OnFragmentInteractionListener mListener;
 
     public BookListFragment() {
@@ -53,7 +54,7 @@ public class BookListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            bookNames = getArguments().getStringArray(ARG_PARAM1);
 
         }
     }
@@ -64,20 +65,22 @@ public class BookListFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_list, container, false);
         listView = v.findViewById(R.id.listView);
-        listView.setAdapter(null);
+        listView.setAdapter(new BookAdapter(parent,bookNames));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mListener.onItemSelection(bookNames[position]);
+            }
+        });
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.parent = context;
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -104,6 +107,6 @@ public class BookListFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onItemSelection(String bookname);
     }
 }
