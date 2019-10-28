@@ -13,11 +13,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
-        android:layout_width="597dp"
+        android:layout_width="527dp"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
-
 </android.support.constraint.ConstraintLayout>
