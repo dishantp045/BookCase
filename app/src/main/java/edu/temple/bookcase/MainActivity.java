@@ -6,8 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BookListFragment.OnFragmentInteractionListener {
 
     private boolean twoPane = false;
     private FragmentManager fm;
@@ -22,8 +23,17 @@ public class MainActivity extends AppCompatActivity {
         final String names[] = res.getStringArray(R.array.bookNames);
 
         if(!twoPane){
-            
+            fm = getSupportFragmentManager();
+            ft = fm.beginTransaction();
+            FrameLayout container1 = findViewById(R.id.container1);
+
+
         }
+
+    }
+
+    @Override
+    public void onItemSelection(String bookname) {
 
     }
 }
