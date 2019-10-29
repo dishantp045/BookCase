@@ -3,4 +3,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="bookNames">
+        <item>Do Androids Dream of Electric Sheep</item>
+        <item>The Hitchhiker's Guide to the Galaxy</item>
+        <item>Something Wicked This Way Comes</item>
+        <item>Pride and Prejudice and Zombies</item>
+        <item>The Curious Incident of The Dog in the Night-Time</item>
+        <item>I Was Told There'd Be Cake</item>
+        <item>To Kill a Mockingbird</item>
+        <item>The Hollow Chocolate Bunnies of the Apocalypse</item>
+        <item>The Unbearable Lightness of Being</item>
+        <item>A Clockwork Orange</item>
+        <item>The Perks of Being a Wallflower</item>
+    </string-array>
 </resources>
