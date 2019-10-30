@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,8 @@ public class BookDetailsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
         text = v.findViewById(R.id.textView);
         text.setText(this.bookName);
-        text.setTextSize(28);
+        text.setTextSize(15);
+        text.setGravity(Gravity.CENTER);
         return v;
     }
 
