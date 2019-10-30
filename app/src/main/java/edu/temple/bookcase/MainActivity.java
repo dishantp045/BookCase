@@ -27,15 +27,16 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             ViewPagerFragment vp = ViewPagerFragment.newInstance(names);
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.add(R.id.container1,vp);
+            ft.replace(R.id.container1,vp);
             ft.commit();
         } else {
             blf = BookListFragment.newInstance(names);
             bdf = BookDetailsFragment.newInstance(names[0]);
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.add(R.id.container1, blf);
-            ft.add(R.id.container2,bdf);
+            ft.replace(R.id.container1, blf);
+            ft.replace(R.id.container2,bdf);
+            ft.addToBackStack(null);
             ft.commit();
         }
 
