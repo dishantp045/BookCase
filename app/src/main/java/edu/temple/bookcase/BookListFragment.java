@@ -69,7 +69,8 @@ public class BookListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mListener.onItemSelection(bookNames[0]);
+                String a = bookNames[position];
+                mListener.onItemSelection(a);
             }
         });
         return v;

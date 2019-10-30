@@ -44,6 +44,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void onItemSelection(String bookname) {
-        bdf.setBookName(bookname);
+        bdf.updateBookName(bookname);
     }
 }

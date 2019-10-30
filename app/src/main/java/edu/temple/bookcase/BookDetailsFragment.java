@@ -81,7 +81,7 @@ public class BookDetailsFragment extends Fragment {
 
     }
 
-    public void setBookName(String BookName){
+    public void updateBookName(String BookName){
         text.setText(BookName);
     }
 
