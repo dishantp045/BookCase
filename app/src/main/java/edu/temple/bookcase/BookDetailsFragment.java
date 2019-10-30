@@ -13,7 +13,7 @@ import android.widget.TextView;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BookDetailsFragment.OnFragmentInteractionListener} interface
+
  * to handle interaction events.
  * Use the {@link BookDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,7 +27,7 @@ public class BookDetailsFragment extends Fragment {
     // TODO: Rename and change types of parameters
 
 
-    private OnFragmentInteractionListener mListener;
+
     private String bookName;
     private TextView text;
     public BookDetailsFragment() {
@@ -63,6 +63,7 @@ public class BookDetailsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
         text = v.findViewById(R.id.textView);
         text.setText(this.bookName);
+        text.setTextSize(28);
         return v;
     }
 
@@ -71,18 +72,13 @@ public class BookDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+
     }
 
     /**
@@ -95,8 +91,5 @@ public class BookDetailsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
 
-    }
 }

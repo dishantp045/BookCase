@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -26,7 +27,7 @@ public class ViewPagerFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String booknames[];
-
+    Context parent;
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,6 +64,7 @@ public class ViewPagerFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_view_pager, container, false);
         ViewPager vp = v.findViewById(R.id.pager);
+        vp.setAdapter(new ViewPagerAdapter(getChildFragmentManager(),booknames));
         return v;
     }
 
@@ -82,6 +84,7 @@ public class ViewPagerFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        parent = context;
     }
 
     @Override
