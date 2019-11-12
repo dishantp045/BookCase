@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import java.util.*;
 
 
 /**
@@ -25,7 +26,7 @@ public class BookListFragment extends Fragment {
     private static final String ARG_PARAM1 = "bookname";
 
     // TODO: Rename and change types of parameters
-    private String bookNames[];
+    private ArrayList<Book> bookNames;
     private ListView listView;
     private Context parent;
     private OnFragmentInteractionListener mListener;
@@ -42,10 +43,10 @@ public class BookListFragment extends Fragment {
      * @return A new instance of fragment BookListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BookListFragment newInstance(String bookName[]) {
+    public static BookListFragment newInstance(ArrayList<Book> bookName) {
         BookListFragment fragment = new BookListFragment();
         Bundle args = new Bundle();
-        args.putStringArray(ARG_PARAM1, bookName);
+        args.putParcelableArrayList(ARG_PARAM1, bookName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +55,7 @@ public class BookListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            bookNames = getArguments().getStringArray(ARG_PARAM1);
+            bookNames = getArguments().getParcelableArrayList(ARG_PARAM1);
 
         }
     }
@@ -69,7 +70,7 @@ public class BookListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String a = bookNames[position];
+                Book a = bookNames.get(position);
                 mListener.onItemSelection(a);
             }
         });
@@ -108,6 +109,6 @@ public class BookListFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onItemSelection(String bookname);
+        void onItemSelection(Book bookname);
     }
 }

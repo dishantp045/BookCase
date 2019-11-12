@@ -1,6 +1,9 @@
 package edu.temple.bookcase;
 
-public class Book {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Book implements Parcelable {
 
     private int id;
     private String title;
@@ -15,6 +18,26 @@ public class Book {
         this.published = published;
         this.coverUrl = coverUrl;
     }
+
+    protected Book(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        author = in.readString();
+        published = in.readInt();
+        coverUrl = in.readString();
+    }
+
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 
     public int getId(){
         return id;
@@ -34,5 +57,19 @@ public class Book {
 
     public String getCoverUrl(){
         return coverUrl;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(author);
+        dest.writeInt(published);
+        dest.writeString(coverUrl);
     }
 }

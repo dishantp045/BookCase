@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import java.util.*;
 
 
 /**
@@ -26,7 +27,7 @@ public class ViewPagerFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String booknames[];
+    private ArrayList<Book> booknames;
     Context parent;
 
     private OnFragmentInteractionListener mListener;
@@ -42,10 +43,10 @@ public class ViewPagerFragment extends Fragment {
      * @return A new instance of fragment ViewPagerFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViewPagerFragment newInstance(String booknames[]) {
+    public static ViewPagerFragment newInstance(ArrayList<Book> booknames) {
         ViewPagerFragment fragment = new ViewPagerFragment();
         Bundle args = new Bundle();
-        args.putStringArray(ARG_PARAM1,booknames);
+        args.putParcelableArrayList(ARG_PARAM1,booknames);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +55,7 @@ public class ViewPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.booknames = getArguments().getStringArray(ARG_PARAM1);
+            this.booknames = getArguments().getParcelable(ARG_PARAM1);
         }
     }
 

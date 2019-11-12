@@ -8,7 +8,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 /**
@@ -29,8 +35,11 @@ public class BookDetailsFragment extends Fragment {
 
 
 
-    private String bookName;
-    private TextView text;
+    private Book bookName;
+    private TextView title;
+    private TextView author;
+    private TextView year;
+    private ImageView cover;
     public BookDetailsFragment() {
         // Required empty public constructor
     }
@@ -42,10 +51,10 @@ public class BookDetailsFragment extends Fragment {
      * @return A new instance of fragment BookDetailsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BookDetailsFragment newInstance(String bookName) {
+    public static BookDetailsFragment newInstance(Book bookName) {
         BookDetailsFragment fragment = new BookDetailsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, bookName);
+        args.putParcelable(ARG_PARAM1, bookName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +63,7 @@ public class BookDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-           this.bookName = getArguments().getString(ARG_PARAM1);
+           this.bookName = getArguments().getParcelable(ARG_PARAM1);
         }
     }
 
@@ -62,10 +71,17 @@ public class BookDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
-        text = v.findViewById(R.id.textView);
-        text.setText(this.bookName);
-        text.setTextSize(15);
-        text.setGravity(Gravity.CENTER);
+        author  = v.findViewById(R.id.author);
+        author.setGravity(Gravity.CENTER);
+        title = v.findViewById(R.id.title);
+        title.setGravity(Gravity.CENTER);
+        year = v.findViewById(R.id.year);
+        year.setGravity(Gravity.CENTER);
+        cover = v.findViewById(R.id.cover);
+        author.setText(bookName.getAuthor());
+        title.setText(bookName.getTitle());
+        year.setText(bookName.getPublished()+"");
+        Picasso.get().load(bookName.getCoverUrl()).resize(50,50).centerCrop().into(cover);
         return v;
     }
 
@@ -83,8 +99,11 @@ public class BookDetailsFragment extends Fragment {
 
     }
 
-    public void updateBookName(String BookName){
-        text.setText(BookName);
+    public void updateBookName(Book BookName){
+        author.setText(BookName.getAuthor());
+        title.setText(BookName.getTitle());
+        year.setText(BookName.getPublished()+"");
+        Picasso.get().load(BookName.getCoverUrl()).resize(50,50).centerCrop().into(cover);
     }
 
     /**
