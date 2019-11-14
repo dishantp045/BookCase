@@ -81,7 +81,7 @@ public class BookDetailsFragment extends Fragment {
         author.setText(bookName.getAuthor());
         title.setText(bookName.getTitle());
         year.setText(bookName.getPublished()+"");
-        Picasso.get().load(bookName.getCoverUrl()).resize(50,50).centerCrop().into(cover);
+        Picasso.get().load(bookName.getCoverUrl()).resize(25,25).centerCrop().into(cover);
         return v;
     }
 
@@ -103,7 +103,7 @@ public class BookDetailsFragment extends Fragment {
         author.setText(BookName.getAuthor());
         title.setText(BookName.getTitle());
         year.setText(BookName.getPublished()+"");
-        Picasso.get().load(BookName.getCoverUrl()).resize(50,50).centerCrop().into(cover);
+        Picasso.get().load(BookName.getCoverUrl()).resize(25,25).centerCrop().into(cover);
     }
 
     /**
