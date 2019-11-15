@@ -20,6 +20,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return PagerAdapter.POSITION_NONE;
+        return names.size();
     }
 }

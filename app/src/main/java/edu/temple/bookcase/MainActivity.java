@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import org.json.JSONArray;
@@ -41,10 +42,12 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         setContentView(R.layout.activity_main);
         twoPane = findViewById(R.id.container2) == null;
         names = new ArrayList<Book>();
-        final String searchString = "";
+        final EditText searchBar = findViewById(R.id.searchbar);
+
         Thread t = new Thread(){
             @Override
             public void run() {
+                String searchString = searchBar.getText().toString();
                 URL bookURL;
                 try {
                     bookURL = new URL("https://kamorris.com/lab/audlib/booksearch.php?search="+searchString);
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             }
         };
         if(twoPane){
+            t.start();
             ViewPagerFragment vp = ViewPagerFragment.newInstance(names);
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
