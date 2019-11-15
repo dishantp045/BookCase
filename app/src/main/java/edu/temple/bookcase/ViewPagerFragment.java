@@ -55,7 +55,7 @@ public class ViewPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.booknames = getArguments().getParcelable(ARG_PARAM1);
+            this.booknames = getArguments().getParcelableArrayList(ARG_PARAM1);
         }
     }
 
