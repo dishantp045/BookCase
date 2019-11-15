@@ -15,8 +15,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         twoPane = findViewById(R.id.container2) == null;
         names = new ArrayList<Book>();
         final EditText searchBar = findViewById(R.id.searchbar);
-
         Thread t = new Thread(){
             @Override
             public void run() {
@@ -58,14 +59,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     tmpResponse = reader.readLine();
                     while(tmpResponse != null){
                         response = response + tmpResponse;
-
                         tmpResponse = reader.readLine();
                     }
                     Log.d("Handler", response);
-                    JSONArray bookOBJ= new JSONArray(response);
+
                     Message msg = Message.obtain();
-                    msg.obj = bookOBJ;
-                    bookHandler.handleMessage(msg);
+                    msg.obj = response;
+                    bookHandler.sendMessage(msg);
                 } catch (Exception e) {
                     Log.e("Fail", e.toString());
                 }
@@ -73,46 +73,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             }
         };
         t.start();
-        /*this.bookHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                JSONArray tmp = (JSONArray) msg.obj;
-                try{
-                    for(int i = 0; i < tmp.length(); i++){
-                        JSONObject a = tmp.getJSONObject(i);
-                        int id = a.getInt("book_id");
-                        Log.d("BOOK_id", a.getInt("book_id")+"");
-                        String title = a.getString("title");
-                        String author = a.getString("author");
-                        int published =  a.getInt("published");
-                        String coverUrl = a.getString("cover_url");
-                        Book book = new Book(id,title,author,published,coverUrl);
-                        names.add(book);
-                    }
-
-                } catch (Exception e){
-                    Log.d("FAIL", e.toString());
-                }
-                return false;
-            }
-        });*/
-        /*if(twoPane){
-
-            ViewPagerFragment vp = ViewPagerFragment.newInstance(names);
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.container1,vp);
-            ft.commit();
-        } else {
-            blf = BookListFragment.newInstance(names);
-            bdf = BookDetailsFragment.newInstance(names.get(0));
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.container1, blf);
-            ft.replace(R.id.container2,bdf);
-            ft.addToBackStack(null);
-            ft.commit();
-        }*/
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                             JSONArray bookOBJ= new JSONArray(response);
                             Message msg = Message.obtain();
                             msg.obj = bookOBJ;
-                            bookHandler.handleMessage(msg);
+                            bookHandler.sendMessage(msg);
                         } catch (Exception e) {
                             Log.d("Fail", e.toString());
                         }
@@ -142,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     }
                 };
                 t.start();
+                CharSequence toast = "Getting new Data";
+                Toast.makeText(getApplicationContext(),toast, Toast.LENGTH_LONG);
             }
         });
     }
@@ -149,27 +111,43 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     Handler bookHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            JSONArray tmp = (JSONArray) msg.obj;
-            try{
-                for(int i = 0; i < tmp.length(); i++){
-                   JSONObject a = tmp.getJSONObject(i);
-                   int id = a.getInt("book_id");
-                   String title = a.getString("title");
-                   Log.d("BOOK_id", a.getInt("book_id")+"");
-                   String author = a.getString("author");
-                   int published =  a.getInt("published");
-                   String coverUrl = a.getString("cover_url");
-                   Book book = new Book(id,title,author,published,coverUrl);
-                   names.add(book);
-                }
 
+            String response = (String) msg.obj;
+            try{
+                JSONArray tmp = new JSONArray(response);
+                for(int i = 0; i < tmp.length(); i++){
+                    JSONObject a = tmp.getJSONObject(i);
+                    int id = a.getInt("book_id");
+                    String title = a.getString("title");
+                    String author = a.getString("author");
+                    int published =  a.getInt("published");
+                    String coverUrl = a.getString("cover_url");
+                    Book book = new Book(id,title,author,published,coverUrl);
+                    names.add(book);
+                }
+                ViewPagerFragment vpf = ViewPagerFragment.newInstance(names);
+                BookListFragment blf = BookListFragment.newInstance(names);
+                BookDetailsFragment bdf = BookDetailsFragment.newInstance(names.get(0));
+                boolean checkPanes = findViewById(R.id.container2)==null;
+                if(checkPanes){
+                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.container1,vpf);
+                    ft.commit();
+                } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.container1,blf);
+                    ft.replace(R.id.container2,bdf);
+                    ft.commit();
+                }
+                Log.d("List Size", names.size()+"");
             } catch (Exception e){
                 Log.d("FAIL", e.toString());
             }
             return false;
         }
     });
-
 
     @Override
     public void onItemSelection(Book bookname) {

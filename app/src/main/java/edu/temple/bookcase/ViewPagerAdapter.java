@@ -11,7 +11,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     ArrayList<Book> names;
     public ViewPagerAdapter(FragmentManager fm, ArrayList<Book> names){
         super(fm);
-        this.names = names;
+        this.names = new ArrayList<Book>();
+        this.names.addAll(names);
     }
     @Override
     public Fragment getItem(int i) {
@@ -20,6 +21,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return names.size();
+        return 7;
     }
 }
