@@ -79,9 +79,9 @@ public class BookDetailsFragment extends Fragment {
         year.setGravity(Gravity.CENTER);
         cover = v.findViewById(R.id.cover);
         author.setText(bookName.getAuthor());
+        Picasso.get().load(bookName.getCoverUrl()).resize(25,25).centerCrop().into(cover);
         title.setText(bookName.getTitle());
         year.setText(bookName.getPublished()+"");
-        Picasso.get().load(bookName.getCoverUrl()).resize(25,25).centerCrop().into(cover);
         return v;
     }
 
