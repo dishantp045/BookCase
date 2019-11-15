@@ -13,57 +13,58 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.Buffer;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements BookListFragment.OnFragmentInteractionListener {
-    final ArrayList<Book> names = new ArrayList<Book>();
+    ArrayList<Book> names;
     private boolean twoPane = false;
     BookListFragment blf;
     BookDetailsFragment bdf;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         twoPane = findViewById(R.id.container2) == null;
-        Context context = getApplicationContext();
-        Resources res = context.getResources();
+        names = new ArrayList<Book>();
         final String searchString = "";
         Thread t = new Thread(){
             @Override
-            public void run(){
-                URL bookData;
-                try{
-                    bookData = new URL("https://kamorris.com/lab/audlib/booksearch.php?search="+searchString);
-                    HttpURLConnection conn = (HttpURLConnection) bookData.openConnection();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String response = "", tmpResponse;
-                    tmpResponse =  br.readLine();
+            public void run() {
+                URL bookURL;
+                try {
+                    bookURL = new URL("https://kamorris.com/lab/audlib/booksearch.php?search="+searchString);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(bookURL.openStream()));
+                    String response = "",tmpResponse;
+                    tmpResponse = reader.readLine();
                     while(tmpResponse != null){
-                        response= response + tmpResponse;
-                        Log.d("response", tmpResponse);
-                        tmpResponse = br.readLine();
+                        response = response + tmpResponse;
+                        tmpResponse = reader.readLine();
                     }
-                    System.out.println(response);
-                    JSONObject bookObject = new JSONObject(response);
+                    JSONArray bookOBJ= new JSONArray(response);
                     Message msg = Message.obtain();
-                    msg.obj = bookObject;
-
-                } catch (Exception e){
-                    e.printStackTrace();
+                    msg.obj = bookOBJ;
+                    bookHandler.handleMessage(msg);
+                } catch (Exception e) {
+                    Log.d("Fail", e.toString());
                 }
+
             }
         };
-        t.start();
         if(twoPane){
             ViewPagerFragment vp = ViewPagerFragment.newInstance(names);
             FragmentManager fm = getSupportFragmentManager();
@@ -80,17 +81,31 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             ft.addToBackStack(null);
             ft.commit();
         }
-
     }
 
-    Handler responseHandler = new Handler(new Handler.Callback() {
+    Handler bookHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            JSONObject respObject = (JSONObject) msg.obj;
+            JSONArray tmp = (JSONArray) msg.obj;
+            try{
+                for(int i = 0; i < tmp.length(); i++){
+                   JSONObject a = tmp.getJSONObject(i);
+                   int id = a.getInt("book_id");
+                   String title = a.getString("title");
+                   String author = a.getString("author");
+                   int published =  a.getInt("published");
+                   String coverUrl = a.getString("cover_url");
+                   Book book = new Book(id,title,author,published,coverUrl);
+                   names.add(book);
+                }
 
+            } catch (Exception e){
+                Log.d("FAIL", e.toString());
+            }
             return false;
         }
     });
+
 
     @Override
     public void onItemSelection(Book bookname) {
