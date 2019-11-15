@@ -16,9 +16,19 @@
     <FrameLayout
         android:id="@+id/container2"
         android:layout_width="527dp"
-        android:layout_height="match_parent"
+        android:layout_height="350dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="527dp"
+        android:layout_height="60dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 </android.support.constraint.ConstraintLayout>
