@@ -11,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         names = new ArrayList<Book>();
         final EditText searchBar = findViewById(R.id.searchbar);
 
-        Thread t = new Thread(){
+        final Thread t = new Thread(){
             @Override
             public void run() {
                 String searchString = searchBar.getText().toString();
@@ -85,6 +87,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             ft.addToBackStack(null);
             ft.commit();
         }
+        Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                t.start();
+            }
+        });
     }
 
     Handler bookHandler = new Handler(new Handler.Callback() {
