@@ -71,7 +71,7 @@ public class BookListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Book a = bookNames.get(position);
-                mListener.onItemSelection(a);
+                mListener.onItemSelection(bookNames.get(position));
             }
         });
         return v;

@@ -127,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     names.add(book);
                 }
                 ViewPagerFragment vpf = ViewPagerFragment.newInstance(names);
-                BookListFragment blf = BookListFragment.newInstance(names);
-                BookDetailsFragment bdf = BookDetailsFragment.newInstance(names.get(0));
+                blf = BookListFragment.newInstance(names);
+                bdf = BookDetailsFragment.newInstance(names.get(0));
                 boolean checkPanes = findViewById(R.id.container2)==null;
                 if(checkPanes){
 
