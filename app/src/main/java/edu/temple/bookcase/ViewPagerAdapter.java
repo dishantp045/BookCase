@@ -21,6 +21,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 7;
+        return names.size();
     }
 }

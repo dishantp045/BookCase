@@ -32,10 +32,10 @@ import java.nio.Buffer;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements BookListFragment.OnFragmentInteractionListener {
-    ArrayList<Book> names;
     private boolean twoPane = false;
     BookListFragment blf;
     BookDetailsFragment bdf;
+    boolean reload = false;
    // Handler bookHandler;
 
 
@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         twoPane = findViewById(R.id.container2) == null;
-        names = new ArrayList<Book>();
         final EditText searchBar = findViewById(R.id.searchbar);
         Thread t = new Thread(){
             @Override
@@ -72,7 +71,10 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
             }
         };
-        t.start();
+        if(reload == false){
+            t.start();
+        }
+        reload = true;
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,9 +93,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                                 response = response + tmpResponse;
                                 tmpResponse = reader.readLine();
                             }
-                            JSONArray bookOBJ= new JSONArray(response);
                             Message msg = Message.obtain();
-                            msg.obj = bookOBJ;
+                            msg.obj = response;
                             bookHandler.sendMessage(msg);
                         } catch (Exception e) {
                             Log.d("Fail", e.toString());
@@ -111,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     Handler bookHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-
             String response = (String) msg.obj;
+            ArrayList<Book> names = new ArrayList<Book>();
             try{
                 JSONArray tmp = new JSONArray(response);
                 for(int i = 0; i < tmp.length(); i++){
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 BookDetailsFragment bdf = BookDetailsFragment.newInstance(names.get(0));
                 boolean checkPanes = findViewById(R.id.container2)==null;
                 if(checkPanes){
+
                     FragmentManager fm = getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.container1,vpf);
