@@ -35,4 +35,11 @@
         android:layout_marginVertical="25dp"
         android:layout_marginLeft="0dp" />
 
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="61dp"
+        android:layout_marginVertical="175dp"
+        android:src="@android:drawable/ic_media_play" />
+
 </FrameLayout>

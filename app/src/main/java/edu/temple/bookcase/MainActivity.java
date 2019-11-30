@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     String author = a.getString("author");
                     int published =  a.getInt("published");
                     String coverUrl = a.getString("cover_url");
-                    Book book = new Book(id,title,author,published,coverUrl);
+                    Book book = new Book(id,title,author,published,coverUrl,0);
                     names.add(book);
                 }
                 ViewPagerFragment vpf = ViewPagerFragment.newInstance(names);
