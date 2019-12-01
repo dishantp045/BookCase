@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +31,7 @@ public class BookDetailsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "bookname";
     private static final String ARG_PARAM2 = "param2";
-
+    private OnFragmentInteractionListener mListener;
     // TODO: Rename and change types of parameters
 
 
@@ -82,6 +83,7 @@ public class BookDetailsFragment extends Fragment {
         Picasso.get().load(bookName.getCoverUrl()).resize(25,25).centerCrop().into(cover);
         title.setText(bookName.getTitle());
         year.setText(bookName.getPublished()+"");
+        ImageButton play = v.findViewById(R.id.playButton);
         return v;
     }
 
@@ -116,5 +118,9 @@ public class BookDetailsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void hitPlay();
+    }
 
 }
