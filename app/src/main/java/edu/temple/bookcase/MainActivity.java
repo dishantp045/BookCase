@@ -78,6 +78,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         seekBar = findViewById(R.id.seekBar);
         titlePlaying = findViewById(R.id.textView);
         audioService = new Intent(this,AudiobookService.class);
+
+        titlePlaying.setText(nowPlayingTitle);
+        seekBar.setProgress(MainActivity.nowPlayingStatus);
+        seekBar.setMax(1000);
+
         final EditText searchBar = findViewById(R.id.searchbar);
         Thread t = new Thread(){
             @Override
@@ -142,15 +147,83 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         });
 
 
-        Button stop = findViewById(R.id.stopButton);
-        stop.setOnClickListener(new View.OnClickListener() {
+
+        stopBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Stopping",Toast.LENGTH_LONG).show();
+                if(isBound){
+                    Toast.makeText(getApplicationContext(),"Stopping",Toast.LENGTH_LONG).show();
+                    audioPlayer.stop();
+                    nowPlayingTitle = "";
+                    titlePlaying.setText(nowPlayingTitle);
+                    seekBar.setProgress(0);
+                    stopService(audioService);
+                }
             }
         });
 
+        pauseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isBound && audioPlayer.isPlaying()){
+                    Toast.makeText(getApplicationContext(),"Pausing",Toast.LENGTH_LONG).show();
+                    audioPlayer.pause();
+                } else if(isBound){
+                    audioPlayer.pause();
+                    Toast.makeText(getApplicationContext(),"Un-Pausing",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+
     }
+
+    Handler seekBarHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if(msg.obj != null){
+                seekBar = findViewById(R.id.seekBar);
+                if(seekBar != null){
+                    AudiobookService.BookProgress bookProgress = (AudiobookService.BookProgress) msg.obj;
+                    if(bookProgress.getProgress() < 0 || bookProgress.getProgress() > 100000){
+                        if(isBound){
+                            audioPlayer.stop();
+                            nowPlayingTitle = "";
+                            titlePlaying.setText(nowPlayingTitle);
+                            seekBar.setProgress(0);
+                        }
+                    }
+                    if(bookProgress.getProgress()<MainActivity.nowPlayingDuration){
+                        seekBar.setProgress(bookProgress.getProgress());
+                        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if(fromUser){
+                                    if(isBound){
+                                        audioPlayer.seekTo(progress);
+                                    }
+                                }else{
+                                    nowPlayingStatus = progress;
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        });
+                    }
+                }
+            }
+            return false;
+        }
+    });
 
     Handler bookHandler = new Handler(new Handler.Callback() {
         @Override
