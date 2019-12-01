@@ -8,9 +8,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -83,7 +85,13 @@ public class BookDetailsFragment extends Fragment {
         Picasso.get().load(bookName.getCoverUrl()).resize(25,25).centerCrop().into(cover);
         title.setText(bookName.getTitle());
         year.setText(bookName.getPublished()+"");
-        ImageButton play = v.findViewById(R.id.playButton);
+        Button play = v.findViewById(R.id.playButton);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.hitPlay(bookName);
+            }
+        });
         return v;
     }
 
@@ -92,12 +100,19 @@ public class BookDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
 
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener = null;
 
     }
 
@@ -120,7 +135,7 @@ public class BookDetailsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void hitPlay();
+        void hitPlay(Book book);
     }
 
 }

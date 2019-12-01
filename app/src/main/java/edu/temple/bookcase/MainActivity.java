@@ -1,8 +1,12 @@
 package edu.temple.bookcase;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +21,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -35,18 +40,44 @@ import java.util.*;
 import edu.temple.audiobookplayer.AudiobookService;
 public class MainActivity extends AppCompatActivity implements BookListFragment.OnFragmentInteractionListener, BookDetailsFragment.OnFragmentInteractionListener {
     private boolean twoPane = false;
+    private static String nowPlayingTitle;
+    private static int nowPlayingDuration;
+    private static int nowPlayingStatus;
     BookListFragment blf;
     BookDetailsFragment bdf;
     boolean reload = false;
+    AudiobookService.MediaControlBinder audioPlayer;
+    SeekBar seekBar;
+    Button pauseBtn;
+    Button stopBtn;
+    TextView titlePlaying;
+    boolean isBound = false;
+    Intent audioService;
    // Handler bookHandler;
 
+    private ServiceConnection audioConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            audioPlayer = (AudiobookService.MediaControlBinder) service;
+            isBound = true;
+        }
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         twoPane = findViewById(R.id.container2) == null;
+        pauseBtn = findViewById(R.id.pauseButton);
+        stopBtn = findViewById(R.id.stopButton);
+        seekBar = findViewById(R.id.seekBar);
+        titlePlaying = findViewById(R.id.textView);
+        audioService = new Intent(this,AudiobookService.class);
         final EditText searchBar = findViewById(R.id.searchbar);
         Thread t = new Thread(){
             @Override
@@ -119,10 +150,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             }
         });
 
-        SeekBar seekBar = findViewById(R.id.seekBar);
-
-
-
     }
 
     Handler bookHandler = new Handler(new Handler.Callback() {
@@ -174,7 +201,17 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     @Override
-    public void hitPlay() {
-
+    public void hitPlay(Book book) {
+        startService(audioService);
+        if(isBound){
+            Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_SHORT).show();
+            seekBar.setMax(book.getDuration());
+            nowPlayingTitle = book.getTitle();
+            nowPlayingDuration = book.getDuration();
+            String a = "Now Playing: " + nowPlayingTitle;
+            titlePlaying.setText(a);
+            audioPlayer.play(book.getId());
+        }
     }
+
 }
