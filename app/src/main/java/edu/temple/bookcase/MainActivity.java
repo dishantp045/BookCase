@@ -52,13 +52,14 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     Button stopBtn;
     TextView titlePlaying;
     boolean isBound = false;
-    Intent audioService;
+    Intent audioServiceIntent;
    // Handler bookHandler;
 
     private ServiceConnection audioConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             audioPlayer = (AudiobookService.MediaControlBinder) service;
+            audioPlayer.setProgressHandler(seekBarHandler);
             isBound = true;
         }
 
@@ -77,11 +78,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         stopBtn = findViewById(R.id.stopButton);
         seekBar = findViewById(R.id.seekBar);
         titlePlaying = findViewById(R.id.textView);
-        audioService = new Intent(this,AudiobookService.class);
-
+        audioServiceIntent = new Intent(this,AudiobookService.class);
+        bindService(audioServiceIntent,audioConnection,Context.BIND_AUTO_CREATE);
         titlePlaying.setText(nowPlayingTitle);
         seekBar.setProgress(MainActivity.nowPlayingStatus);
-        seekBar.setMax(1000);
+        seekBar.setMax(MainActivity.nowPlayingDuration);
 
         final EditText searchBar = findViewById(R.id.searchbar);
         Thread t = new Thread(){
@@ -151,13 +152,14 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         stopBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Stopping",Toast.LENGTH_LONG).show();
                 if(isBound){
-                    Toast.makeText(getApplicationContext(),"Stopping",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),"Stopping",Toast.LENGTH_LONG).show();
                     audioPlayer.stop();
                     nowPlayingTitle = "";
                     titlePlaying.setText(nowPlayingTitle);
                     seekBar.setProgress(0);
-                    stopService(audioService);
+                    stopService(audioServiceIntent);
                 }
             }
         });
@@ -165,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         pauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Pausing",Toast.LENGTH_LONG).show();
                 if(isBound && audioPlayer.isPlaying()){
                     Toast.makeText(getApplicationContext(),"Pausing",Toast.LENGTH_LONG).show();
                     audioPlayer.pause();
@@ -275,9 +278,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void hitPlay(Book book) {
-        startService(audioService);
+        startService(audioServiceIntent);
+        Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_SHORT).show();
+        Log.d("bound", isBound+"");
         if(isBound){
-            Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_SHORT).show();
             seekBar.setMax(book.getDuration());
             nowPlayingTitle = book.getTitle();
             nowPlayingDuration = book.getDuration();
