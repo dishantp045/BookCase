@@ -222,6 +222,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                             }
                         });
                     }
+                    if(bookProgress.getProgress()==MainActivity.nowPlayingDuration){
+                        audioPlayer.stop();
+                        nowPlayingTitle = "";
+                        titlePlaying.setText(nowPlayingTitle);
+                        seekBar.setProgress(0);
+                        stopService(audioServiceIntent);
+                    }
                 }
             }
             return false;
