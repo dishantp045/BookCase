@@ -178,7 +178,28 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             }
         });
 
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    if(isBound){
+                        audioPlayer.seekTo(progress);
+                    } else {
+                        nowPlayingStatus = progress;
+                    }
+                }
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
     }
 
@@ -199,28 +220,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     }
                     if(bookProgress.getProgress()<MainActivity.nowPlayingDuration){
                         seekBar.setProgress(bookProgress.getProgress());
-                        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                            @Override
-                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                if(fromUser){
-                                    if(isBound){
-                                        audioPlayer.seekTo(progress);
-                                    }
-                                }else{
-                                    nowPlayingStatus = progress;
-                                }
-                            }
-
-                            @Override
-                            public void onStartTrackingTouch(SeekBar seekBar) {
-
-                            }
-
-                            @Override
-                            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                            }
-                        });
                     }
                     if(bookProgress.getProgress()==MainActivity.nowPlayingDuration){
                         audioPlayer.stop();
