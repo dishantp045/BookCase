@@ -298,4 +298,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         }
     }
 
+    @Override
+    public void hitDownload(Book book) {
+        
+    }
+
 }

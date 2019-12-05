@@ -82,7 +82,7 @@ public class BookDetailsFragment extends Fragment {
         year.setGravity(Gravity.CENTER);
         cover = v.findViewById(R.id.cover);
         author.setText(bookName.getAuthor());
-        Picasso.get().load(bookName.getCoverUrl()).resize(25,25).centerCrop().into(cover);
+        Picasso.get().load(bookName.getCoverUrl()).resize(150,150).centerCrop().into(cover);
         title.setText(bookName.getTitle());
         year.setText(bookName.getPublished()+"");
         Button play = v.findViewById(R.id.playButton);
@@ -90,6 +90,13 @@ public class BookDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mListener.hitPlay(bookName);
+            }
+        });
+        Button download = v.findViewById(R.id.downloadButton);
+        download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.hitDownload(bookName);
             }
         });
         return v;
@@ -120,7 +127,7 @@ public class BookDetailsFragment extends Fragment {
         author.setText(BookName.getAuthor());
         title.setText(BookName.getTitle());
         year.setText(BookName.getPublished()+"");
-        Picasso.get().load(BookName.getCoverUrl()).resize(25,25).centerCrop().into(cover);
+        Picasso.get().load(BookName.getCoverUrl()).resize(150,150).centerCrop().into(cover);
     }
 
     /**
@@ -136,6 +143,8 @@ public class BookDetailsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void hitPlay(Book book);
+
+        void hitDownload(Book book);
     }
 
 }

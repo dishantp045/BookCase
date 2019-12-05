@@ -16,7 +16,7 @@
     <FrameLayout
         android:id="@+id/container2"
         android:layout_width="531dp"
-        android:layout_height="339dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
