@@ -31,6 +31,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //sharedPreferences = getSharedPreferenc
+        sharedPreferences = getPreferences(MODE_PRIVATE);
         autoSave = sharedPreferences.getBoolean("autoSave",false);
         twoPane = findViewById(R.id.container2) == null;
         pauseBtn = findViewById(R.id.pauseButton);
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
             }
         };
-        if(!autoSave){
+        if(!autoSave) {
             t.start();
         }
         Button button = findViewById(R.id.button);
@@ -315,9 +317,49 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         Thread mp3 = new Thread(){
             @Override
             public void run() {
+                FileInputStream fis = null;
+                try {
+                    fis = openFileInput("audio_"+b.getId()+".mp3");
+                } catch(IOException e){
+                    Log.e("fis opening", "run: ", e);
+                }
+                if(fis == null){
+                    String toDownload = "https://kamorris.com/lab/audlib/download.php?id="+b.getId();
+                    int count;
+                    try{
+                        URL url = new URL(toDownload);
+                        URLConnection conn = url.openConnection();
+                        conn.connect();
+                        int fileLength = conn.getContentLength();
+                        Log.d("ANDRO_ASYNC", "Length of file: " + fileLength);
+                        InputStream input = new BufferedInputStream(url.openStream());
+                        Log.d("INPUT", "run: ");
+                        OutputStream output = new FileOutputStream("audio_"+b.getId()+".mp3");
+                        Log.d("OUTPUT", "run: ");
+                        byte data[] = new byte[1024];
+                        long total = 0;
+                        while((count = input.read(data)) != -1){
+                            total+=count;
+                            output.write(data,0,count);
+                        }
+                        output.flush();
+                        output.close();
+                        input.close();
+                    } catch(MalformedURLException e){
+                        Log.e("DOWNLOAD ERROR","URL FAILED FOR "+b.getTitle(),e);
+                    } catch(IOException e){
+                        Log.e("DOWNLOAD ERROR","Opening Connection failed FOR "+b.getTitle(),e);
+                    }
+                } else {
+                    File dir = getFilesDir();
+                    File file = new File(dir,"audio_"+b.getId()+".mp3");
+                    boolean closed = file.delete();
+                    Log.d("FILE DELETED", b.getId()+"was deleted is "+closed);
+                }
 
             }
         };
+        mp3.start();
 
     }
 
