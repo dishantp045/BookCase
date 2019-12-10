@@ -92,11 +92,16 @@ public class BookDetailsFragment extends Fragment {
                 mListener.hitPlay(bookName);
             }
         });
-        Button download = v.findViewById(R.id.downloadButton);
+        final Button download = v.findViewById(R.id.downloadButton);
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.hitDownload(bookName);
+                if(download.getText() == "Download"){
+                    download.setText("Delete");
+                } else {
+                    download.setText("Download");
+                }
             }
         });
         return v;

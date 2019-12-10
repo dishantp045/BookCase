@@ -11,6 +11,7 @@ public class Book implements Parcelable {
     private int published;
     private String coverUrl;
     private int duration;
+    private int progress;
 
     public Book(int id, String title, String author, int published, String coverUrl, int duration){
         this.id = id;
@@ -62,6 +63,10 @@ public class Book implements Parcelable {
     }
 
     public int getDuration(){return duration;}
+
+    public void setProgress(int progress) {this.progress=progress;}
+
+    public int getProgress() {return progress;}
 
     @Override
     public int describeContents() {

@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.IBinder;
@@ -28,13 +29,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.Buffer;
 import java.util.*;
 import edu.temple.audiobookplayer.AudiobookService;
@@ -53,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     TextView titlePlaying;
     boolean isBound = false;
     Intent audioServiceIntent;
+    SharedPreferences sharedPreferences;
+    boolean autoSave;
    // Handler bookHandler;
 
     private ServiceConnection audioConnection = new ServiceConnection() {
@@ -73,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //sharedPreferences = getSharedPreferenc
+        autoSave = sharedPreferences.getBoolean("autoSave",false);
         twoPane = findViewById(R.id.container2) == null;
         pauseBtn = findViewById(R.id.pauseButton);
         stopBtn = findViewById(R.id.stopButton);
@@ -88,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         Thread t = new Thread(){
             @Override
             public void run() {
-                String searchString = searchBar.getText().toString();
+                String searchString = sharedPreferences.getString("search","");
                 URL bookURL;
                 try {
                     bookURL = new URL("https://kamorris.com/lab/audlib/booksearch.php?search="+searchString);
@@ -110,10 +120,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
             }
         };
-        if(reload == false){
+        if(!autoSave){
             t.start();
         }
-        reload = true;
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     @Override
                     public void run() {
                         String searchString = searchBar.getText().toString();
+                        sharedPreferences.edit().putString("search",searchString);
                         URL bookURL;
                         try {
                             bookURL = new URL("https://kamorris.com/lab/audlib/booksearch.php?search="+searchString);
@@ -252,6 +262,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     Book book = new Book(id,title,author,published,coverUrl,duration);
                     names.add(book);
                 }
+
                 ViewPagerFragment vpf = ViewPagerFragment.newInstance(names);
                 blf = BookListFragment.newInstance(names);
                 bdf = BookDetailsFragment.newInstance(names.get(0));
@@ -300,7 +311,14 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void hitDownload(Book book) {
-        
+        final Book b = book;
+        Thread mp3 = new Thread(){
+            @Override
+            public void run() {
+
+            }
+        };
+
     }
 
 }
