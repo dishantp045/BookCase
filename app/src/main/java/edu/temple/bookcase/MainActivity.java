@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     @Override
                     public void run() {
                         String searchString = searchBar.getText().toString();
-                        sharedPreferences.edit().putString("search",searchString);
+                        sharedPreferences.edit().putString("search",searchString).apply();
                         URL bookURL;
                         try {
                             bookURL = new URL("https://kamorris.com/lab/audlib/booksearch.php?search="+searchString);
@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 if(fromUser){
                     if(isBound){
                         audioPlayer.seekTo(progress);
+                        nowPlayingStatus = progress;
                     } else {
                         nowPlayingStatus = progress;
                     }
