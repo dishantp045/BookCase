@@ -301,13 +301,25 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_SHORT).show();
         Log.d("bound", isBound+"");
         if(isBound){
-            //Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_SHORT).show();
-            seekBar.setMax(book.getDuration());
-            nowPlayingTitle = book.getTitle();
-            nowPlayingDuration = book.getDuration();
-            String a = "Now Playing: " + nowPlayingTitle;
-            titlePlaying.setText(a);
-            audioPlayer.play(book.getId());
+            File dir = getFilesDir();
+            File file = new File(dir,"audio_"+book.getId()+".mp3");
+            if(!file.exists()){
+                //Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_SHORT).show();
+                seekBar.setMax(book.getDuration());
+                nowPlayingTitle = book.getTitle();
+                nowPlayingDuration = book.getDuration();
+                String a = "Now Playing: " + nowPlayingTitle;
+                titlePlaying.setText(a);
+                audioPlayer.play(book.getId());
+            } else {
+                seekBar.setMax(book.getDuration());
+                nowPlayingTitle = book.getTitle();
+                nowPlayingDuration = book.getDuration();
+                String a = "Now Playing: " + nowPlayingTitle;
+                titlePlaying.setText(a);
+                audioPlayer.play(file);
+            }
+
         }
     }
 
@@ -317,13 +329,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         Thread mp3 = new Thread(){
             @Override
             public void run() {
-                FileInputStream fis = null;
-                try {
-                    fis = openFileInput("audio_"+b.getId()+".mp3");
-                } catch(IOException e){
-                    Log.e("fis opening", "run: ", e);
-                }
-                if(fis == null){
+                File dir = getFilesDir();
+                File file = new File(dir,"audio_"+b.getId()+".mp3");
+                if(!file.exists()){
                     String toDownload = "https://kamorris.com/lab/audlib/download.php?id="+b.getId();
                     int count;
                     try{
@@ -351,10 +359,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                         Log.e("DOWNLOAD ERROR","Opening Connection failed FOR "+b.getTitle(),e);
                     }
                 } else {
-                    File dir = getFilesDir();
-                    File file = new File(dir,"audio_"+b.getId()+".mp3");
                     boolean closed = file.delete();
-                    Log.d("FILE DELETED", b.getId()+"was deleted is "+closed);
+                    Log.d("FILE DELETED", b.getId()+" was deleted is "+closed);
                 }
 
             }
