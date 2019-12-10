@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     SharedPreferences sharedPreferences;
     boolean autoSave;
    // Handler bookHandler;
+    Book isPlaying = null;
 
     private ServiceConnection audioConnection = new ServiceConnection() {
         @Override
@@ -188,6 +189,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     Toast.makeText(getApplicationContext(),"Un-Pausing",Toast.LENGTH_LONG).show();
                 }
             }
+
+
         });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -301,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         startService(audioServiceIntent);
         Toast.makeText(getApplicationContext(), "Playing", Toast.LENGTH_SHORT).show();
         Log.d("bound", isBound+"");
+        isPlaying = book;
         if(isBound){
             File dir = getFilesDir();
             File file = new File(dir,"audio_"+book.getId()+".mp3");
